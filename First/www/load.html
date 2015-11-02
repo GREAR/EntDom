@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>Storage Example</title>
+
+    <script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+    // Wait for Cordova to load
+    //
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        // window.localStorage.setItem("key", "value");
+        // var keyname = window.localStorage.key(i);
+        // keyname is now equal to "key"
+        // var value = window.localStorage.getItem("key");
+        // value is now equal to "value"
+        // window.localStorage.removeItem("key");
+        // window.localStorage.setItem(1 , "Waarde");
+        // var value = window.localStorage.getItem(1);
+        //window.localStorage.clear();
+        // localStorage is now empty
+    }
+        window.localStorage.setItem(1 , "Waarde");
+        var value = window.localStorage.getItem(1);
+    </script>
+  </head>
+  <body>
+    <h1>Example</h1>
+    <p>localStorage</p>
+    <script type="text/javascript"> 
+    document.writeln(value); 
+    </script> 
+  </body>
+</html>
