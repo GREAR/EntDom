@@ -22,7 +22,8 @@
     //
     function onDeviceReady() {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
-   }
+        
+    }
 
     // onSuccess Geolocation
     //
@@ -71,21 +72,55 @@ function pon() {
 function opslaan(){
     var repartidor = document.getElementById('repart').value;
     window.localStorage.setItem(1 , repartidor);
-    location.href="Index.html";
+    location.href="index.html";
     pon();
 }
 
 function stop(){
-	location.href="Index.html";
+	location.href="index.html";
     pon();
+}
+
+/*Script del Reloj */
+function actualizaReloj() {
+/* Capturamos la Hora, los minutos y los segundos */
+marcacion = new Date()
+/* Capturamos la Hora */
+Hora = marcacion.getHours()
+/* Capturamos los Minutos */
+Minutos = marcacion.getMinutes()
+/* Capturamos los Segundos */
+Segundos = marcacion.getSeconds()
+/* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+if (Hora <= 9) Hora = "0" + Hora
+if (Minutos <= 9) Minutos = "0" + Minutos
+if (Segundos <= 9) Segundos = "0" + Segundos
+
+
+/*Script de la Fecha */
+var Dia = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+var Mes = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
+"Octubre", "Noviembre", "Diciembre");
+var Hoy = new Date();
+var Anio = Hoy.getFullYear();
+var Fecha = Dia[Hoy.getDay()] + ", " + Hoy.getDate() + " de " + Mes[Hoy.getMonth()] + " de " + Anio + ". ";
+
+/* Creamos 2 variables para darle formato a nuestro Script */
+var Script, Total
+Script = Fecha + Hora + ":" + Minutos + ":" + Segundos + " ";
+Total = Script;
+
+
+document.getElementById('Fecha_Reloj').innerHTML = Total
+setTimeout("actualizaReloj()", 1000)
 }
 
 </script>
 
 </head>
 
-  
-  <body onload="pon()">
+
+  <body onload="pon(),actualizaReloj()">
     <!-- Status bar overlay for fullscreen mode-->
     <div class="statusbar-overlay"></div>
     <!-- Panels overlay-->
@@ -122,16 +157,43 @@ function stop(){
           <div data-page="index" class="page">
             <!-- Scrollable page content-->
             <div class="page-content">
-              <div class="content-block-title">Usuario</div>
+              <div class="content-block-title">Repartidor</div>
               <div class="content-block">
                 <div class="content-block-inner">
                   <output type="text" id="gebruiker"></output>
-                  
-                  
-                  <p>Esto es la primera parte de mi app!</p>
-                  <p>Aqui tengo el texto para usar como a mi me da la gana.</p>
+                  </div>
+                  <div class="list-block">
+					<ul>
+					  <li>
+					    <div class="item-content">
+					      <div class="item-media"><i class="icon icon-form-name"></i></div>
+					      <div class="item-inner"> 
+					        <div class="item-title label">ID compra</div>
+					        <div class="item-input">
+					          <input type="text" id="numtick" placeholder="Nº ticket" />
+					        </div>
+					      </div>
+					    </div>
+					  <li>
+					    <div class="item-content">
+					      <div class="item-media"><i class="icon icon-form-password"></i></div>
+					      <div class="item-inner"> 
+					        <div class="item-title label">Hora Entrega</div>
+					        <div class="item-input">
+					          <output type="date" id="Fecha_Reloj"></output>
+					        </div>
+					      </div>
+					    </div>
+					  </li>
+					 </ul>
+					</div>
+			      <div class="content-block">
+			        <div class="row">
+			          <div class="col-100">
+			          <input type="submit" value="Grabar Compra" class="button button-big button-fill color-green" onclick=""/></div>
+			          </div>
+			        </div>
                 </div>
-              </div>
               <div class="content-block-title">Menu</div>
               <div class="list-block">
                 <ul>
@@ -155,7 +217,7 @@ function stop(){
               <div class="content-block">
                 <div class="row">
                   <div class="col-50"><a href="#" data-panel="left" class="button open-panel">Links</a></div>
-                  <div class="col-50"><a href="#" data-panel="right" class="button open-panel">Rechts</a></div>
+                  <div class="col-50"><a href="#" data-panel="right" class="button open-panel">Informacion</a></div>
                 </div>
               </div>
             </div>
@@ -163,7 +225,7 @@ function stop(){
         </div>
         <!-- Bottom Toolbar-->
         <div class="toolbar">
-          <div class="toolbar-inner"><a href="#" class="link">links 1</a><a href="#" class="link">Links 2</a></div>
+          <div class="toolbar-inner"><a href="https://www.grear.es" class="link">Grear</a><a href="https://spargrancanaria.net/indexon.php" class="Intranet">BackOffice</a></div>
         </div>
       </div>
     </div>
