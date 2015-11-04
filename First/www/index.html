@@ -16,18 +16,77 @@
 
 <script type="text/javascript">
 
-function Opslaan(){
-    var repartidor = document.getElementById('repart').innerHTML;
-    window.localStorage.setItem(1 , repartidor);
-    alert(repartidor);
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    // Cordova is ready
+    //
+    function onDeviceReady() {
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        alert("hello")
     }
+
+    // onSuccess Geolocation
+    //
+    function onSuccess(position) {
+        var element = document.getElementById('geolocation');
+        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
+                            'Longitude: '          + position.coords.longitude             + '<br />' +
+                            'Altitude: '           + position.coords.altitude              + '<br />' +
+                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
+                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
+                            'Heading: '            + position.coords.heading               + '<br />' +
+                            'Speed: '              + position.coords.speed                 + '<br />' +
+                            'Timestamp: '          + position.timestamp                    + '<br />';
+    alert(Latitude+" "+Longitude);
+    window.localStorage.setItem(2 , Latitude);
+    window.localStorage.setItem(3 , Longitude);
+    }
+
+    // onError Callback receives a PositionError object
+    //
+    function onError(error) {
+        alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
+    }
+
+document.addEventListener("deviceready", function(){
+   
+  if(navigator.network.connection.type == Connection.NONE){
+    $("#home_network_button").text('No Internet Access')
+                 .attr("data-icon", "delete")
+                 .button('refresh');
+  }
+ 
+});
+
+
+function pon() {
+	if ((window.localStorage.getItem(1)) !== null) {
+		var repartidor = window.localStorage.getItem(1);
+	}else{
+		var repartidor = "No identificado";
+	}
+ 	document.getElementById("gebruiker").value = repartidor;
+}
+
+function opslaan(){
+    var repartidor = document.getElementById('repart').value;
+    window.localStorage.setItem(1 , repartidor);
+    location.href="Index.htm";
+    pon();
+}
+
+function stop(){
+	location.href="Index.htm";
+    pon();
+}
 
 </script>
 
 </head>
 
   
-  <body>
+  <body onload="pon()">
     <!-- Status bar overlay for fullscreen mode-->
     <div class="statusbar-overlay"></div>
     <!-- Panels overlay-->
@@ -41,8 +100,8 @@ function Opslaan(){
     <!-- Right panel with cover effect-->
     <div class="panel panel-right panel-cover">
       <div class="content-block">
-        <p>Esto no se si me sobra</p>
-      </div>
+      	<output id="home_network_button" data-icon="check">Internet Access Enabled</output>
+        </div>
     </div>
     <!-- Views-->
     <div class="views">
@@ -67,7 +126,9 @@ function Opslaan(){
               <div class="content-block-title">Usuario</div>
               <div class="content-block">
                 <div class="content-block-inner">
-                  <div id="gebruiker"></div>
+                  <output type="text" id="gebruiker"></output>
+                  
+                  
                   <p>Esto es la primera parte de mi app!</p>
                   <p>Aqui tengo el texto para usar como a mi me da la gana.</p>
                 </div>
@@ -83,7 +144,7 @@ function Opslaan(){
                       </div></a></li>
                 </ul>
                  <ul>
-                  <li><a href="geo.html" class="item-link">
+                  <li><a onclick=onDeviceReady() class="item-link">
                       <div class="item-content"> 
                         <div class="item-inner">
                           <div class="item-title">Geolocalizacion</div>
@@ -111,12 +172,13 @@ function Opslaan(){
 	<script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <!-- Path to your app js-->
-    <script type="text/javascript" src="js/my-app.js"><
-  
-  var repartidor = window.localStorage.getItem(1);
-  document.getElementById('gebruiker').innerHTML = "Erwin Groenewegen"; 
-	
-</script>
+    <script type="text/javascript" src="js/my-app.js"></script>
+    
+    <script type="text/javascript">
+    
+
+
+    </script>
 
   </body>
 </html>
