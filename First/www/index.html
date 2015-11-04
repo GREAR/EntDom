@@ -22,8 +22,7 @@
     //
     function onDeviceReady() {
         navigator.geolocation.getCurrentPosition(onSuccess, onError);
-        alert("hello")
-    }
+   }
 
     // onSuccess Geolocation
     //
@@ -72,12 +71,12 @@ function pon() {
 function opslaan(){
     var repartidor = document.getElementById('repart').value;
     window.localStorage.setItem(1 , repartidor);
-    location.href="Index.htm";
+    location.href="Index.html";
     pon();
 }
 
 function stop(){
-	location.href="Index.htm";
+	location.href="Index.html";
     pon();
 }
 
