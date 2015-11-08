@@ -1,45 +1,165 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Device Properties Example</title>
 
-    <script type="text/javascript" charset="utf-8" src="cordova-2.1.0.js"></script>
-    <script type="text/javascript" charset="utf-8">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <style>
+      html, body, #map-canvas {
+        height: 80%;
+        width: 95%;
+        margin: 5px;
+        padding: 5px;
+      }
+    </style>
+    <title>Compras a Domicilio</title>
+    <!-- Path to Framework7 Library CSS-->
+    <link rel="stylesheet" href="css/framework7.ios.min.css">
+    <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="css/my-app.css">
 
-    // Wait for Cordova to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjpwA8y03T5wJZIpBymB7R5Rgc94o_rIw"></script>
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+<script type="text/javascript">
+
+function terug(){
+    self.location='index.html';
+}
+
+function ophalen(){
+
+
+
+}
+
+
+function initialize(){
+	
+var venta = {};  
+var i = 1;
+var k = 1;
+var lt=new Array;
+var lg=new Array;
+var tk=new Array;
+var tijd = ((((Date.now()/1000)/60)/60)/24);
+tijd=parseInt(tijd-2);
+do {
+  if (parseInt(window.localStorage.getItem(i+3)) >= tijd){  
+        lg[k]= Number(window.localStorage.getItem(i+5));
+        lt[k]= Number(window.localStorage.getItem(i+4));
+        tk[k]= window.localStorage.getItem(i+1);
+        venta[k] = {center: new google.maps.LatLng(lg[k], lt[k]), ticket: tk[k]};
+        k=k+1;
+  }
+  i=i+5;
+} while (i < localStorage.length)
+	
+	var lat = window.localStorage.getItem("ltx");
+	var lng = window.localStorage.getItem("lty");
+
+	var styles = [
+    {
+      stylers: [
+        { hue: "#0099ff" },
+        { saturation: -40 }
+      ]
+    },{
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        { lightness: 120 },
+        { visibility: "simplified" }
+      ]
+    },{
+      featureType: "road",
+      elementType: "labels",
+      stylers: [
+        { visibility: "off" }
+      ]
     }
+    ];
+	var styledMap = new google.maps.StyledMapType(styles,
+    	{name: "Styled Map"});
 
-    // onSuccess Geolocation
-    //
-    function onSuccess(position) {
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          +                                   position.timestamp          + '<br />';
-    }
+    	
+   
+	
+	var mapOptions = {
+		zoom: 15,
+		center: new google.maps.LatLng(lat, lng),
+		mapTypeControlOptions: {
+		mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+		}
+	};
+	
+	var map = new google.maps.Map(document.getElementById('map-canvas'),
+		mapOptions);
+	
+		map.mapTypes.set('map_style', styledMap);
+		map.setMapTypeId('map_style');
+	
+	var trafficLayer = new google.maps.TrafficLayer();
+		trafficLayer.setMap(map);
+	
+	var i =1;
+	for (var tienda in venta){
+	    alert(lt[i]);
+	var pos = new google.maps.LatLng(lt[i], lg[i]);
+	marker = new google.maps.Marker({
+    position: pos,
+    icon: { path: google.maps.SymbolPath.CIRCLE,
+        fillColor: '#1f276b',
+        fillOpacity: 0.2,
+        strokeColor: '#373b5c',
+        strokeWeight: 1,
+        scale: 20
+    },
+    title: tk[i],
+    draggable: false,
+    map: map
+	});
+	i=i+1;
+	
+}
 
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-    }
+}
 
-    </script>
-  </head>
-  <body>
-    <p id="geolocation">Finding geolocation...</p>
-  </body>
+google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+
+</head>
+
+<body onload="initialize()">
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="left"><a href="#" onclick="terug()" class="back link"> <i class="icon icon-back"></i><span>Volver</span></a></div>
+    <div class="center sliding">Posicion</div>
+    <div class="right">
+      <!-- Right link contains only icon - additional "icon-only" class--><a href="#" class="link icon-only open-panel"> <i class="icon icon-bars"></i></a>
+    </div>
+  </div>
+</div>
+<div class="pages">
+  <!-- Page, data-page contains page name-->
+  <div data-page="form" class="page">
+    <!-- Scrollable page content-->
+    <div class="page-content">
+      <div class="content-block-title">Geolocalizacion</div>
+
+                <div id="map-canvas"></div>
+
+  </div>
+</div>
+</div>
+
+</body>
+
 </html>
+
+
+

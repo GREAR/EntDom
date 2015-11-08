@@ -1,77 +1,88 @@
 <!DOCTYPE html>
 <html>
 
- <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>My App</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100px;
+        width: 100px;
+        margin: 5px;
+        padding: 5px;
+      }
+    </style>
+    <title>Compras a Domicilio</title>
     <!-- Path to Framework7 Library CSS-->
     <link rel="stylesheet" href="css/framework7.ios.min.css">
     <link rel="stylesheet" href="css/framework7.ios.colors.min.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/my-app.css">
- 
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAjpwA8y03T5wJZIpBymB7R5Rgc94o_rIw"></script>
 
 <script type="text/javascript">
 
-    document.addEventListener("deviceready", onDeviceReady, false);
 
-    // Cordova is ready
-    //
-    function onDeviceReady() {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-        
-    }
+var id, target, options;
+var posx,posy;
 
-    // onSuccess Geolocation
-    //
-    function onSuccess(position) {
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          + position.timestamp                    + '<br />';
-    alert(Latitude+" "+Longitude);
-    window.localStorage.setItem(2 , Latitude);
-    window.localStorage.setItem(3 , Longitude);
-    }
-
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-                'message: ' + error.message + '\n');
-    }
-
-document.addEventListener("deviceready", function(){
-   
-  if(navigator.network.connection.type == Connection.NONE){
-    $("#home_network_button").text('No Internet Access')
-                 .attr("data-icon", "delete")
-                 .button('refresh');
+function success(pos) {
+  var crd = pos.coords;
+  	posx=pos.coords.latitude;
+  	posy=pos.coords.longitude;
+  if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+    navigator.geolocation.clearWatch(id);
   }
- 
-});
+};
 
+function error(err) {
+  console.warn('ERROR(' + err.code + '): ' + err.message);
+};
+
+target = {
+  latitude : 0,
+  longitude: 0,
+}
+
+options = {
+  enableHighAccuracy: false,
+  timeout: 5000,
+  maximumAge: 0
+};
+
+id = navigator.geolocation.watchPosition(success, error, options);
+
+
+function geoloc(){
+
+window.localStorage.setItem("ltx" , posx);
+window.localStorage.setItem("lty" , posy);
+self.location='geo.html';
+
+}
 
 function pon() {
-	if ((window.localStorage.getItem(1)) !== null) {
-		var repartidor = window.localStorage.getItem(1);
+	if ((window.localStorage.getItem("naam")) !== null) {
+		var repartidor = window.localStorage.getItem("naam");
 	}else{
 		var repartidor = "No identificado";
 	}
  	document.getElementById("gebruiker").value = repartidor;
+	document.getElementById("numtick").value = "";
 }
 
 function opslaan(){
     var repartidor = document.getElementById('repart').value;
-    window.localStorage.setItem(1 , repartidor);
+    if (repartidor !== ""){
+    window.localStorage.setItem("naam" , repartidor);
+    }
+    var pass = document.getElementById('passw').value;
+    if (pass !== ""){
+    window.localStorage.setItem("paswoord" , pass);
+    }
     location.href="index.html";
     pon();
 }
@@ -81,43 +92,82 @@ function stop(){
     pon();
 }
 
+function actualizaReloj(){
 /*Script del Reloj */
-function actualizaReloj() {
 /* Capturamos la Hora, los minutos y los segundos */
-marcacion = new Date()
-/* Capturamos la Hora */
-Hora = marcacion.getHours()
-/* Capturamos los Minutos */
-Minutos = marcacion.getMinutes()
-/* Capturamos los Segundos */
-Segundos = marcacion.getSeconds()
-/* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
-if (Hora <= 9) Hora = "0" + Hora
-if (Minutos <= 9) Minutos = "0" + Minutos
-if (Segundos <= 9) Segundos = "0" + Segundos
+	marcacion = new Date()
+	/* Capturamos la Hora */
+	Hora = marcacion.getHours()
+	/* Capturamos los Minutos */
+	Minutos = marcacion.getMinutes()
+	/* Capturamos los Segundos */
+	Segundos = marcacion.getSeconds()
+	/* Si la Hora, los Minutos o los Segundos son Menores o igual a 9, le añadimos un 0 */
+	if (Hora <= 9) Hora = "0" + Hora
+	if (Minutos <= 9) Minutos = "0" + Minutos
+	if (Segundos <= 9) Segundos = "0" + Segundos
+	
+	
+	/*Script de la Fecha */
+	var Dia = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
+	var Mes = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
+	"Octubre", "Noviembre", "Diciembre");
+	var Hoy = new Date();
+	var Anio = Hoy.getFullYear();
+	var Fecha = Dia[Hoy.getDay()] + ", " + Hoy.getDate() + " de " + Mes[Hoy.getMonth()] + " de " + Anio + ". ";
+	
+	/* Creamos 2 variables para darle formato a nuestro Script */
+	var Script, Total
+	Script = Fecha + Hora + ":" + Minutos + ":" + Segundos + " ";
+	Total = Script;
+	
+	document.getElementById('Fecha_Reloj').innerHTML = Total;
+	setTimeout("actualizaReloj()", 1000);
+}
 
+function entrega(){
 
-/*Script de la Fecha */
-var Dia = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo");
-var Mes = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
-"Octubre", "Noviembre", "Diciembre");
-var Hoy = new Date();
-var Anio = Hoy.getFullYear();
-var Fecha = Dia[Hoy.getDay()] + ", " + Hoy.getDate() + " de " + Mes[Hoy.getMonth()] + " de " + Anio + ". ";
+	var repartidor = window.localStorage.getItem("naam");
+	var ticket = document.getElementById('numtick').value;
+	
+	if (ticket !== ""){
+	for (var i = 0; i < localStorage.length; i++){
+		countKey = localStorage.key(i);
+	}
+	i=i+1
+	window.localStorage.setItem(i , repartidor);
+	i=i+1
+	var tijd = ((((Date.now()/1000)/60)/60)/24);
+	window.localStorage.setItem(i , tijd);
+	i=i+1
+	var geopos = posx;
+	window.localStorage.setItem(i , geopos);
+	i=i+1
+	var geopos = posy;
+	window.localStorage.setItem(i , geopos);
+	i=i+1
+	window.localStorage.setItem(i , ticket);
+	alert(repartidor + ','+ tijd + ','  + geopos + ',' + ticket);	
+	pon();
+	}else{
+		alert('Introduce nº ticket');
+	}
+	
+}
 
-/* Creamos 2 variables para darle formato a nuestro Script */
-var Script, Total
-Script = Fecha + Hora + ":" + Minutos + ":" + Segundos + " ";
-Total = Script;
-
-
-document.getElementById('Fecha_Reloj').innerHTML = Total
-setTimeout("actualizaReloj()", 1000)
+function borrar(){
+	
+var txt;
+var r = confirm("¿Seguro que quieres borrar todos los datos?");
+if (r == true) {
+    localStorage.clear();
+    alert('Los datos han sido eliminados')
+} 
+	
 }
 
 </script>
-
-</head>
+</head>  
 
 
   <body onload="pon(),actualizaReloj()">
@@ -190,7 +240,7 @@ setTimeout("actualizaReloj()", 1000)
 			      <div class="content-block">
 			        <div class="row">
 			          <div class="col-100">
-			          <input type="submit" value="Grabar Compra" class="button button-big button-fill color-green" onclick=""/></div>
+			          <input type="submit" value="Grabar Compra" class="button button-big button-fill color-green" onclick="entrega()"/></div>
 			          </div>
 			        </div>
                 </div>
@@ -205,7 +255,15 @@ setTimeout("actualizaReloj()", 1000)
                       </div></a></li>
                 </ul>
                  <ul>
-                  <li><a onclick=onDeviceReady() class="item-link">
+                  <li><a href="disclaimer.html" class="item-link">
+                      <div class="item-content"> 
+                        <div class="item-inner">
+                          <div class="item-title">Disclaimer</div>
+                        </div>
+                      </div></a></li>
+                </ul>
+                 <ul>
+                  <li><a href="#" onclick="geoloc()" class="item-link">
                       <div class="item-content"> 
                         <div class="item-inner">
                           <div class="item-title">Geolocalizacion</div>
@@ -225,21 +283,18 @@ setTimeout("actualizaReloj()", 1000)
         </div>
         <!-- Bottom Toolbar-->
         <div class="toolbar">
-          <div class="toolbar-inner"><a href="https://www.grear.es" class="link">Grear</a><a href="https://spargrancanaria.net/indexon.php" class="Intranet">BackOffice</a></div>
+          <div class="toolbar-inner"><a href="#" onclick="window.open('https://www.grear.es/', '_system', 'location=no');"  class="link">Grear</a><a href="#" onclick="window.open('https://spargrancanaria.net/indexon.php', '_system', 'location=no')" class="Intranet">BackOffice</a></div>
         </div>
       </div>
     </div>
     <!-- Path to Framework7 Library JS-->
-	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="cordova.j"></script>
     <script type="text/javascript" src="js/framework7.min.js"></script>
     <!-- Path to your app js-->
     <script type="text/javascript" src="js/my-app.js"></script>
-    
     <script type="text/javascript">
-    
 
-
-    </script>
+</script>
 
   </body>
 </html>
